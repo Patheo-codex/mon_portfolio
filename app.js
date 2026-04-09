@@ -302,8 +302,8 @@
   const projects = [
     {
       tag: "Animation",
-      title: "Portail UI",
-      desc: "Une page “wow” mobile: fond particules réactif, titres animés, cartes et modales qui glissent proprement.",
+      title: "Dashbord",
+      desc: "Tableau de bord avec une page de connexion permettant de gerer ses stock et ses ventes en ligne",
       points: ["Fond particules canvas (tactile)", "Révélations au scroll via IntersectionObserver", "CTA avec ripple + micro-interactions"],
       primaryText: "Voir (placeholder)",
     },
