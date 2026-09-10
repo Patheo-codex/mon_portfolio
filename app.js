@@ -191,7 +191,7 @@
     let dpr = 1;
     const pointer = { x: 0, y: 0, down: false };
     const particles = [];
-    const maxParticles = 90;
+    const maxParticles = 45;
 
     const rand = (a, b) => a + Math.random() * (b - a);
     const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
@@ -206,7 +206,7 @@
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = Math.round(clamp((w * h) / 18000, 22, maxParticles));
+      const count = Math.round(clamp((w * h) / 26000, 14, maxParticles));
       particles.length = 0;
       for (let i = 0; i < count; i++) {
         particles.push({
@@ -293,7 +293,7 @@
       }
 
       // Draw links
-      const linkDist = Math.max(88, Math.min(150, w / 7));
+      const linkDist = Math.max(70, Math.min(120, w / 10));
       for (let i = 0; i < particles.length; i++) {
         const a = particles[i];
         for (let j = i + 1; j < particles.length; j++) {
