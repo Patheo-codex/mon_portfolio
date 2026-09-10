@@ -101,6 +101,37 @@
     });
   }
 
+  // ========== Page transition on local navigation ==========
+  const localLinks = $$('a[href]').filter((link) => {
+    const href = link.getAttribute("href") || "";
+    if (
+      !href ||
+      href.startsWith("#") ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:") ||
+      link.hasAttribute("download") ||
+      /\.(pdf|doc|docx|xls|xlsx|ppt|pptx)(\?.*)?$/i.test(href)
+    ) {
+      return false;
+    }
+    try {
+      const url = new URL(href, window.location.href);
+      return url.origin === window.location.origin && !link.target;
+    } catch {
+      return false;
+    }
+  });
+
+  localLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      document.body.classList.add("page-exit");
+      setTimeout(() => {
+        window.location.href = link.href;
+      }, 200);
+    });
+  });
+
   // ========== Counters ==========
   const counterEls = $$(".counter[data-target]");
   const counterObs = new IntersectionObserver(
@@ -143,6 +174,13 @@
     { threshold: 0.25 }
   );
   for (const el of skillEls) skillObs.observe(el);
+
+  $$(".skill-ring").forEach((ring) => {
+    ring.addEventListener("click", () => {
+      const paused = ring.classList.toggle("is-paused");
+      ring.setAttribute("aria-pressed", String(paused));
+    });
+  });
 
   // ========== Particles background ==========
   const canvas = $("#bg");
@@ -301,25 +339,28 @@
 
   const projects = [
     {
-      tag: "Animation",
+      tag: "UI/UX",
       title: "Dashbord",
       desc: "Tableau de bord avec une page de connexion permettant de gerer ses stock et ses ventes en ligne",
       points: ["Fond particules canvas (tactile)", "Révélations au scroll via IntersectionObserver", "CTA avec ripple + micro-interactions"],
-      primaryText: "Voir (placeholder)",
+      primaryText: "Voir le projet",
+      link: "https://patheo-codex.github.io/Gestion-de-stock/",
     },
     {
       tag: "Performance",
-      title: "Galerie fluide",
-      desc: "Cartes projet optimisées pour mobile avec effet de brillance et tilt au toucher. Ouverture de modale animée.",
+      title: "Gestionnaire des salles de classes et des professeurs",
+      desc: "Application web permettant d'aider les administrateurs à gérer les salles de classes et les professeurs d'une école.",
       points: ["Effet shine côté CSS", "Tilt tactile léger (JS)", "Modale avec transitions propres + fermeture facile"],
-      primaryText: "Voir (placeholder)",
+      primaryText: "Voir le projet",
+      link: "",
     },
     {
       tag: "UI/UX",
       title: "Formulaire stylé",
       desc: "Formulaire avec labels flottants, validation HTML native et retour utilisateur sous forme de toast.",
       points: ["Champs avec labels flottants", "Toast de confirmation à l’envoi", "Fallback mailto si aucune backend n’est utilisée"],
-      primaryText: "Voir (placeholder)",
+      primaryText: "Voir le projet",
+      link: "",
     },
   ];
 
@@ -343,8 +384,21 @@
       modalList.appendChild(div);
     }
 
-    modalPrimary.textContent = p.primaryText;
-    modalSecondary.href = "#contact";
+    modalPrimary.textContent = "Voir la démo";
+    modalPrimary.href = p.link || "#";
+    modalPrimary.target = p.link ? "_blank" : "";
+    modalPrimary.rel = p.link ? "noopener noreferrer" : "";
+
+    if (p.link) {
+      modalPrimary.classList.remove("is-hidden");
+    } else {
+      modalPrimary.classList.add("is-hidden");
+    }
+
+    modalSecondary.textContent = "Voir le projet";
+    modalSecondary.href = p.link || "#";
+    modalSecondary.target = p.link ? "_blank" : "";
+    modalSecondary.rel = p.link ? "noopener noreferrer" : "";
 
     modalClose.focus({ preventScroll: true });
   }
@@ -475,4 +529,3 @@
   const yearEl = $("#year");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 })();
-
